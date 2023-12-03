@@ -5,16 +5,18 @@
 {% block style %}{% static 'css/main_style.css' %}{% endblock %}
 
 {% block content %}
-        <h1>To-do task manager!</h1>
-        <div class="task_container">
-            {% for task in tasks %}
-                <div class="task_box">
-                    <h2>{{task.description}}</h2>
-                    <h3>Status: {{ task.task_status}}</h3>
-                    <h3>Finish date: {{task.date}}</h3>
-                    <p><a href="{% url 'task_details' task.pk %}">Подробнее</a></p>
+        <h1>Каталог товаров</h1>
+        <div class="product_container row justify-content-around">
+            {% for product in products %}
+                <div class="card row justify-content-between" style="width: 18rem; margin:30px auto; padding: 1% 0">
+                    <img src={{product.image}} class="card-img-top img-fluid" alt="...">
+                    <div class="">
+                      <h5 class="card-title">{{product.title}}</h5>
+                      <p class="card-text">{{product.category.title}}</p>
+                      <h5 class="card-text">{{product.price}}</h5>
+                      <a href="#" class="btn btn-primary">Подробнее</a>
+                    </div>
                 </div>
-                <hr>
             {% endfor %}
         </div>
 {% endblock %}

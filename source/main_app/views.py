@@ -10,6 +10,7 @@ def products_view(request):
     context = {
         'products': products
     }
+    print(products)
     return render(request, 'main_page.html', context)
 
 # #############################################################################
