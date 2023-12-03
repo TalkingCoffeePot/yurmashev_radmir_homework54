@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from main_app.models import Product, Categories
 # Create your views here.
 
 
-# def main_list(request):
-#     tasks = Task.objects.all()
-#     context = {
-#         'tasks': tasks
-#     }
-#     return render(request, 'main_page.html', context)
+def products_view(request):
+    products = Product.objects.all()
+    context = {
+        'products': products
+    }
+    return render(request, 'main_page.html', context)
 
 # #############################################################################
 # def new_task(request):

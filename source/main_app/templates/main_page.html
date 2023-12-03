@@ -3,13 +3,7 @@
 
 {% block title %}Main Page{% endblock %}
 {% block style %}{% static 'css/main_style.css' %}{% endblock %}
-{% block menu %}
-    <li class="list">
-        <div class="new_task_button">
-            <a href="{% url 'new_task' %}">Добавить новую задачу</a>
-        </div>
-    </li>
-{% endblock %}
+
 {% block content %}
         <h1>To-do task manager!</h1>
         <div class="task_container">
