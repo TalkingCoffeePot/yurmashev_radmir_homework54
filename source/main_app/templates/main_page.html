@@ -14,7 +14,7 @@
                       <h5 class="card-title">{{product.title}}</h5>
                       <p class="card-text">{{product.category.title}}</p>
                       <h5 class="card-text">{{product.price}}</h5>
-                      <a href="#" class="btn btn-primary">Подробнее</a>
+                      <a href="{% url 'product_card' product.pk %}" class="btn btn-primary">Подробнее</a>
                     </div>
                 </div>
             {% endfor %}

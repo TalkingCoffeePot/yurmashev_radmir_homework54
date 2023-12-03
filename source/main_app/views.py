@@ -41,9 +41,9 @@ def products_view(request):
 #     return redirect('tasks')
 
 # ##############################################################################
-# def detailed_view(request, pk):
-#     task = Task.objects.get(pk=pk)
-#     context = {
-#         'task': task
-#     }
-#     return render(request, 'detailed_task.html', context)
+def product_view(request, pk):
+    product = Product.objects.get(pk=pk)
+    context = {
+        'product': product
+    }
+    return render(request, 'detailed_view.html', context)

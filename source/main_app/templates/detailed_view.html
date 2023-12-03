@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Detailed{% endblock %}
+{% block style %}{% static 'css/detailed.css' %}{% endblock %}
+
+{% block content %}
+         <div class="product_box">
+            <div class="image">
+                <img src={{product.image}} class="" alt="...">
+            </div>
+            <div class="card-box" style="width: 30rem;">
+                <div class="card-body">
+                    <h2 class="card-title">{{product.title}}</h2>
+                    <h4 class="card-text">{{product.category.title}}</h4>
+                    <h3 class="card-text">Цена: {{product.price}}</h3>
+                    <p class="card-text">{{product.description}}</p>
+                    <h4 class="card-text">Добавлено: {{product.date}}</h4>
+                </div>
+            </div>
+         </div>    
+{% endblock %}
+
