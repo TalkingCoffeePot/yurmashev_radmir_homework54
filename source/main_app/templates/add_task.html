@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Detailed{% endblock %}
+{% block style %}{% static 'css/add_style.css' %}{% endblock %}
+{% block menu %}
+    <li class="list">
+        <div class="return">
+            <a href="{% url 'tasks' %}">На главную</a>
+        </div>
+    </li>
+{% endblock %}
+{% block content %}
+<h1>Добавление новой задачи</h1>
+<form action="{% url 'added' %}" method="post">
+    <div class="form_box">
+        {% csrf_token %}
+        <div class="box">
+            <input name='description' type="text" value="Ваша задача">
+        </div>
+
+        <div class="box">
+            <select name="status" id="">
+                {% for task_status in status_choices %}
+                    <option value="{{ task_status.0 }}">{{task_status.1}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="box">
+            <input name='date' type="date" value="YYYY-MM-DD">
+        </div>
+        <div class="box">
+            <textarea name='details' type="text">Опишите детали</textarea>
+        </div>
+
+        <div class="box">
+            <button type="submit">Создать задачу</button>
+        </div>
+    </div> 
+</form>
+{% endblock %}
+
+
