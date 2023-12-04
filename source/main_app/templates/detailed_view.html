@@ -16,6 +16,10 @@
                     <h3 class="card-text">Цена: {{product.price}}</h3>
                     <p class="card-text">{{product.description}}</p>
                     <h4 class="card-text">Добавлено: {{product.date}}</h4>
+                    <div>
+                        <a href="{% url 'prod_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+                        <a href="{% url 'prod_edit' product.pk %}" class="btn btn-primary">Редактировать</a>
+                    </div>
                 </div>
             </div>
          </div>    

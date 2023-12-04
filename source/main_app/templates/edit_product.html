@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Detailed{% endblock %}
+{% block style %}{% static 'css/add_style.css' %}{% endblock %}
+
+{% block content %}
+<h1>Редактировать товар</h1>
+<form action="" method="post">
+    <div class="form_box">
+        {% csrf_token %}
+        <div class="box">
+            <input name='title' type="text" value="{{product.title}}">
+        </div>
+
+        <div class="box price">
+            <label for="prod_price">Цена: </label>
+            <input name='price' id="prod_price" type="number" value="{{product.price}}" step="any">
+        </div>
+
+        <div class="box">
+            <input name='image' type="url" value="{{product.image}}">
+        </div>
+
+        <div class="box">
+            <select name="prod_category" class="">
+                <option value="{{product.category}}" selected class="fw-bold fw-italic">{{product.category.title}}</option>
+                {% for category in categories %}
+                    <option value="{{ category.pk }}">{{category.title}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="box">
+            <textarea name='description' type="text">{{product.description}}</textarea>
+        </div>
+
+        <div class="box">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </div> 
+</form>
+{% endblock %}
+
+

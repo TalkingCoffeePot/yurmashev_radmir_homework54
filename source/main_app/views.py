@@ -24,7 +24,7 @@ def product_add_view(request):
         title = request.POST.get('title')  
         price = request.POST.get('price')  
         image = request.POST.get('image')  
-        category = int(request.POST.get('prod_category'))  
+        category = request.POST.get('prod_category')
         description = request.POST.get('description')  
 
         product = Product.objects.create(title=title, price=price, image=image, category_id=category, description=description)
@@ -39,6 +39,30 @@ def product_view(request, pk):
     }
     return render(request, 'detailed_view.html', context)
 
+def product_delete(request, pk):
+    Product.objects.filter(pk=pk).delete()
+    return redirect('products')
+
+def product_edit_view(request, pk):
+    if request.method == 'GET':
+        categories = Categories.objects.all()
+        product = Product.objects.get(pk=pk)
+        context = {
+            'categories': categories,
+            'product': product
+        }
+        return render(request, 'edit_product.html', context)
+    elif request.method == 'POST':
+        title = request.POST.get('title')  
+        price = request.POST.get('price')  
+        image = request.POST.get('image')  
+        category = request.POST.get('prod_category')
+        description = request.POST.get('description')  
+
+        Product.objects.filter(pk=pk).update(title=title, price=price, image=image, category_id=category, description=description)
+
+        return redirect('product_card', pk=pk)
+
 def category_add_view(request):
     if request.method == 'GET':
         return render(request, 'add_category.html')
@@ -47,5 +71,4 @@ def category_add_view(request):
         description = request.POST.get('description')  
 
         Categories.objects.create(title=title, description=description)
-
         return redirect('products')
