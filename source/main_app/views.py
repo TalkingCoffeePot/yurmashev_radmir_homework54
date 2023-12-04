@@ -13,32 +13,26 @@ def products_view(request):
     print(products)
     return render(request, 'main_page.html', context)
 
-# #############################################################################
-# def new_task(request):
-#     context = {
-#         'status_choices': status_choices
-#     }
-#     return render(request, 'add_task.html', context)
+#############################################################################
+def product_add_view(request):
+    categories = Categories.objects.all()
+    context = {
+        'categories': categories
+    }
+    return render(request, 'add_product.html', context)
 
-# #############################################################################
-# def add_task(request):
-#     description = request.POST.get('description')
+#############################################################################
+def added_producy_view(request):
+    title = request.POST.get('title')  
+    price = request.POST.get('price')  
+    image = request.POST.get('image')  
+    category = request.POST.get('category')  
+    description = request.POST.get('description')  
+
+    product = Product.objects.create(title=title, price=price, image=image, category=category, description=description)
+    product.save()
     
-#     status = request.POST.get('status')
-#     for x in status_choices:
-#         if x[0] == status:
-#             status = x[1]
-
-#     date = request.POST.get('date')
-#     details = request.POST.get('details')
-
-#     Task.objects.create(description=description, task_status=status, date=date, details=details)
-#     task = Task.objects.all()
-
-#     context = {
-#         'tasks': task
-#     }
-#     return redirect('tasks')
+    return redirect('product_card', pk=product.pk)
 
 # ##############################################################################
 def product_view(request, pk):

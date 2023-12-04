@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Detailed{% endblock %}
+{% block style %}{% static 'css/add_style.css' %}{% endblock %}
+
+{% block content %}
+<h1>Добавить товар</h1>
+<form action="{% url 'added' %}" method="post">
+    <div class="form_box">
+        {% csrf_token %}
+        <div class="box">
+            <input name='title' type="text" value="Наименование">
+        </div>
+
+        <div class="box">
+            <input name='price' type="number" value="Цена" step="any">
+        </div>
+
+        <div class="box">
+            <input name='image' type="url" value="Ссылка на изображение">
+        </div>
+
+        <div class="box">
+            <select name="category" class="form-select">
+                {% for category in categories %}
+                    <option value="{{category.pk}}">{{category.title}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="box">
+            <textarea name='description' type="text">Описание</textarea>
+        </div>
+
+        <div class="box">
+            <button type="submit">Добавить</button>
+        </div>
+    </div> 
+</form>
+{% endblock %}
+
+
