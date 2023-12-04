@@ -13,31 +13,39 @@ def products_view(request):
     print(products)
     return render(request, 'main_page.html', context)
 
-#############################################################################
 def product_add_view(request):
-    categories = Categories.objects.all()
-    context = {
-        'categories': categories
-    }
-    return render(request, 'add_product.html', context)
+    if request.method == 'GET':
+        categories = Categories.objects.all()
+        context = {
+            'categories': categories
+        }
+        return render(request, 'add_product.html', context)
+    elif request.method == 'POST':
+        title = request.POST.get('title')  
+        price = request.POST.get('price')  
+        image = request.POST.get('image')  
+        category = int(request.POST.get('prod_category'))  
+        description = request.POST.get('description')  
 
-#############################################################################
-def added_producy_view(request):
-    title = request.POST.get('title')  
-    price = request.POST.get('price')  
-    image = request.POST.get('image')  
-    category = request.POST.get('category')  
-    description = request.POST.get('description')  
+        product = Product.objects.create(title=title, price=price, image=image, category_id=category, description=description)
 
-    product = Product.objects.create(title=title, price=price, image=image, category=category, description=description)
-    product.save()
-    
-    return redirect('product_card', pk=product.pk)
+        return redirect('product_card', pk=product.pk)
 
-# ##############################################################################
 def product_view(request, pk):
     product = Product.objects.get(pk=pk)
+    print(type(product.category))
     context = {
         'product': product
     }
     return render(request, 'detailed_view.html', context)
+
+def category_add_view(request):
+    if request.method == 'GET':
+        return render(request, 'add_category.html')
+    elif request.method == 'POST':
+        title = request.POST.get('title')  
+        description = request.POST.get('description')  
+
+        Categories.objects.create(title=title, description=description)
+
+        return redirect('products')

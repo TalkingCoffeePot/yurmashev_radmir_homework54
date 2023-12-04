@@ -6,6 +6,7 @@ body {
     margin: 0;
     height: 50%;
     background: linear-gradient(137deg, rgba(193,134,221,1) 0%, rgba(161,161,245,1) 46%, rgba(0,212,255,1) 100%);
+    background-attachment: fixed;
 }
 
 h1 {
