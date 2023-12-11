@@ -5,7 +5,7 @@ from main_app.forms import ProductForm
 
 
 def products_view(request):
-    products = Product.objects.exclude(count=0).order_by('category', 'title')
+    products = Product.objects.exclude(count=0).order_by('-category', '-title')
     context = {
         'products': products
     }
