@@ -3,8 +3,8 @@ from main_app.models import Categories, Product
 
 # Register your models here.
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'description', 'category', 'date', 'price', 'image']
-    list_editable = ['title', 'description', 'category', 'price', 'image']
+    list_display = ['id', 'title', 'description', 'category', 'date', 'price', 'image', 'count']
+    list_editable = ['title', 'description', 'category', 'price', 'image', 'count']
 
 class CategoriesAdmin(admin.ModelAdmin):
     list_display=['id', 'title', 'description']
