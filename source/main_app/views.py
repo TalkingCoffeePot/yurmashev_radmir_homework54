@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from main_app.models import Product, Categories
-from main_app.forms import ProductForm
+from main_app.forms import ProductForm, CategoriesForm
 # Create your views here.
 
 
@@ -32,7 +32,7 @@ def product_add_view(request):
                                    count=form.cleaned_data['count'])
             return redirect('product_card', pk=product.pk)
         else:
-            return render(request, 'new_product', context={'form': form})
+            return render(request, 'add_product.html', context={'form': form})
 
 def product_view(request, pk):
     product = Product.objects.get(pk=pk)
@@ -82,10 +82,16 @@ def product_edit_view(request, pk):
 
 def category_add_view(request):
     if request.method == 'GET':
-        return render(request, 'add_category.html')
+        form = CategoriesForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'add_category.html', context)
     elif request.method == 'POST':
-        title = request.POST.get('title')  
-        description = request.POST.get('description')  
-
-        Categories.objects.create(title=title, description=description)
-        return redirect('products')
+        form = CategoriesForm(data=request.POST)
+        if form.is_valid():
+            Categories.objects.create(title=form.cleaned_data['title'], 
+                                  description=form.cleaned_data['description'])
+            return redirect('products')
+        else:
+            return render(request, 'add_category.html', context={'form': form})

@@ -7,19 +7,6 @@
 {% block content %}
 <h1>Добавить категорию</h1>
 <form action="" method="post">
-    <div class="form_box">
-        {% csrf_token %}
-        <div class="box">
-            <input name='title' type="text" value="Наименование">
-        </div>
-
-        <div class="box">
-            <textarea name='description' type="text">Описание</textarea>
-        </div>
-
-        <div class="box">
-            <button type="submit" class="btn btn-primary">Добавить</button>
-        </div>
-    </div> 
+    {% include 'partial/forms.html' with button_text='Добавить' %}
 </form>
 {% endblock %}

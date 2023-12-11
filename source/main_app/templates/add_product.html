@@ -9,39 +9,6 @@
 <form action="" method="post">
     {% include 'partial/forms.html' with button_text='Добавить' %}
 </form>
-<!-- <form action="" method="post">
-    <div class="form_box">
-        {% csrf_token %}
-        <div class="box">
-            <input name='title' type="text" value="Наименование">
-        </div>
-
-        <div class="box price">
-            <label for="prod_price">Цена: </label>
-            <input name='price' id="prod_price" type="number" value="Цена" step="any">
-        </div>
-
-        <div class="box">
-            <input name='image' type="url" value="Ссылка на изображение">
-        </div>
-
-        <div class="box">
-            <select name="prod_category" class="">
-                {% for category in categories %}
-                    <option value="{{ category.pk }}">{{category.title}}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="box">
-            <textarea name='description' type="text">Описание</textarea>
-        </div>
-
-        <div class="box">
-            <button type="submit" class="btn btn-primary">Добавить</button>
-        </div>
-    </div> 
-</form> -->
 {% endblock %}
 
 

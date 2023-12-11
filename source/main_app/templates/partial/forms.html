@@ -1,10 +1,16 @@
 {% csrf_token %}
+
 {% for field in form %}
 <div class="box">
     <h3><label for="{{ field.id_for_label }}">{{ field.label }}:</label></h3>
     <p class="field">{{ field }}</p>
 </div>
 {% endfor %}
+{% if form.errors %}
+    <div class="alert alert-danger">
+        {{form.errors}}
+    </div>
+{% endif %}
 <div class="box">
     <input type="submit" value="{{ button_text }}">
 </div>
