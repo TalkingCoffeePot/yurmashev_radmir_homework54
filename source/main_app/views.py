@@ -36,7 +36,6 @@ def product_add_view(request):
 
 def product_view(request, pk):
     product = Product.objects.get(pk=pk)
-    print(type(product.category))
     context = {
         'product': product
     }
