@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from main_app.models import Product, Categories
+from main_app.forms import ProductForm
 # Create your views here.
 
 
 def products_view(request):
-    products = Product.objects.all()
+    products = Product.objects.exclude(count=0).order_by('category', 'title')
     context = {
         'products': products
     }
@@ -16,20 +15,23 @@ def products_view(request):
 def product_add_view(request):
     if request.method == 'GET':
         categories = Categories.objects.all()
+        form = ProductForm()
         context = {
-            'categories': categories
+            'categories': categories,
+            'form': form
         }
         return render(request, 'add_product.html', context)
     elif request.method == 'POST':
-        title = request.POST.get('title')  
-        price = request.POST.get('price')  
-        image = request.POST.get('image')  
-        category = request.POST.get('prod_category')
-        description = request.POST.get('description')  
-
-        product = Product.objects.create(title=title, price=price, image=image, category_id=category, description=description)
-
-        return redirect('product_card', pk=product.pk)
+        form = ProductForm(data=request.POST)
+        if form.is_valid():
+            product = Product.objects.create(title=form.cleaned_data['title'], 
+                                   price=form.cleaned_data['price'], 
+                                   image=form.cleaned_data['image'], 
+                                   category_id=form.cleaned_data['category'], 
+                                   description=form.cleaned_data['description'])
+            return redirect('product_card', pk=product.pk)
+        else:
+            return render(request, 'new_product', context={'form': form})
 
 def product_view(request, pk):
     product = Product.objects.get(pk=pk)
