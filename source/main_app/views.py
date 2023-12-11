@@ -43,8 +43,12 @@ def product_view(request, pk):
     return render(request, 'detailed_view.html', context)
 
 def product_delete(request, pk):
-    Product.objects.filter(pk=pk).delete()
-    return redirect('products')
+    product = Product.objects.get(pk=pk) 
+    if request.method == 'GET':
+        return render(request, 'delete_product.html', context={'card': product})
+    elif request.method == 'POST':
+        product.delete()
+        return redirect('cards')    
 
 def product_edit_view(request, pk):
     product = Product.objects.get(pk=pk)
