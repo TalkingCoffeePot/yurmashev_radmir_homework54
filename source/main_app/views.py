@@ -27,8 +27,9 @@ def product_add_view(request):
             product = Product.objects.create(title=form.cleaned_data['title'], 
                                    price=form.cleaned_data['price'], 
                                    image=form.cleaned_data['image'], 
-                                   category_id=form.cleaned_data['category'], 
-                                   description=form.cleaned_data['description'])
+                                   category=form.cleaned_data['category'], 
+                                   description=form.cleaned_data['description'],
+                                   count=form.cleaned_data['count'])
             return redirect('product_card', pk=product.pk)
         else:
             return render(request, 'new_product', context={'form': form})
@@ -46,24 +47,35 @@ def product_delete(request, pk):
     return redirect('products')
 
 def product_edit_view(request, pk):
+    product = Product.objects.get(pk=pk)
     if request.method == 'GET':
-        categories = Categories.objects.all()
-        product = Product.objects.get(pk=pk)
+        form = ProductForm(initial={
+            'title': product.title,
+            'price': product.price,
+            'image': product.image,
+            'category_id': product.category,
+            'description': product.description,
+            'count': product.count
+        })
         context = {
-            'categories': categories,
-            'product': product
+            'product': product,
+            'form': form
         }
         return render(request, 'edit_product.html', context)
+    
     elif request.method == 'POST':
-        title = request.POST.get('title')  
-        price = request.POST.get('price')  
-        image = request.POST.get('image')  
-        category = request.POST.get('prod_category')
-        description = request.POST.get('description')  
-
-        Product.objects.filter(pk=pk).update(title=title, price=price, image=image, category_id=category, description=description)
-
-        return redirect('product_card', pk=pk)
+        form = ProductForm(data=request.POST)
+        if form.is_valid():
+            product.title=form.cleaned_data['title'] 
+            product.price=form.cleaned_data['price'] 
+            product.image=form.cleaned_data['image']
+            product.category=form.cleaned_data['category']
+            product.description=form.cleaned_data['description']
+            product.count=form.cleaned_data['count']
+            product.save()
+            return redirect('product_card', pk=pk)
+        else:
+            return render(request, 'edit_product.html', context={'product': product, 'form': form})
 
 def category_add_view(request):
     if request.method == 'GET':
