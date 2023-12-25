@@ -23,3 +23,8 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.pk}, {self.title}' 
+    
+
+class CartModel(models.Model):
+    product = models.ForeignKey('main_app.Product', on_delete=models.PROTECT, verbose_name='Корзина', related_name='in_cart', null=True, blank=True)
+    count = models.IntegerField('Количество', validators=[validate_zero], null=False, blank=False, default=0)

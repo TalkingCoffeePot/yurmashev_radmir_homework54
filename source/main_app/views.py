@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from main_app.models import Product, Categories
+from main_app.models import Product, Categories, CartModel
 from main_app.forms import ProductForm, CategoriesForm
 from main_app.forms import SimpleSearchForm
 from urllib.parse import urlencode
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
-from django.views.generic import ListView, DeleteView, DetailView, UpdateView, CreateView
+from django.views.generic import ListView, DeleteView, DetailView, UpdateView, CreateView, View
 # Create your views here.
 
 
@@ -44,8 +44,8 @@ class ListProductsView(ListView):
             return self.form.cleaned_data['search']
         return None
 
-class DetailProductView(DeleteView):
-    template_name = 'detailed_product.html'
+class DetailProductView(DetailView):
+    template_name = 'detailed_view.html'
     model = Product
     context_object_name = 'product'
     pk_url_kwarg = 'product_pk'
@@ -81,4 +81,17 @@ class CreateCategoryView(CreateView):
     form_class = CategoriesForm
     
     def get_success_url(self):
+        return reverse('products')
+    
+
+class ToCartView(View):
+    def get(self, request, *args, **kwargs):
+        prod = Product.objects.get(pk=kwargs['product_pk'])
+        if CartModel.objects.include(product=prod.pk) and prod.count > 0:
+            cart = CartModel.objects.get(product=prod.pk)
+            cart.count += 1
+            cart.save()
+        elif not CartModel.objects.include(product=prod.pk)  and prod.count > 0:
+            CartModel.objects.create(prod.pk, 1)
+
         return reverse('products')

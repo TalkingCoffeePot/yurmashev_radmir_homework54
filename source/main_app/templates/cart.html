@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Main Page{% endblock %}
+{% block title %}Cart{% endblock %}
 {% block style %}{% static 'css/main_style.css' %}{% endblock %}
 
 {% block content %}
-        <h1>Каталог товаров</h1>
+        <h1>Корзина</h1>
         <div class="product_container row justify-content-around">
             {% for product in products %}
                 <div class="card row justify-content-between" style="width: 18rem; margin:30px auto; padding: 1% 0">
