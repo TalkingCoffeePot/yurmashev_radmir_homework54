@@ -16,15 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main_app.views import products_view, product_view, product_add_view, category_add_view, product_delete, product_edit_view
+from main_app.views import ListProductsView, CreateProductView, CreateCategoryView, UpdateProduct, DetailProductView, DeleteProduct
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', products_view, name='products'),
-    path('products/', products_view, name='products'),
-    path('products/add', product_add_view, name='new_product'),
-    path('categories/add/', category_add_view, name='new_category'),
-    path('products/<int:pk>/', product_view, name='product_card'),
-    path('products/<int:pk>/delete/', product_delete, name='prod_delete'),
-    path('products/<int:pk>/edit/', product_edit_view, name='prod_edit')
+    path('', ListProductsView.as_view(), name='products'),
+    path('products/', ListProductsView.as_view(), name='products'),
+    path('products/add', CreateProductView.as_view(), name='new_product'),
+    path('categories/add/', CreateCategoryView.as_view(), name='new_category'),
+    path('products/<int:product_pk>/', DetailProductView.as_view(), name='product_card'),
+    path('products/<int:product_pk>/delete/', DeleteProduct.as_view(), name='prod_delete'),
+    path('products/<int:product_pk>/edit/', UpdateProduct.as_view(), name='prod_edit')
 ]

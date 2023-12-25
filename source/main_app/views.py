@@ -1,97 +1,84 @@
 from django.shortcuts import render, redirect
 from main_app.models import Product, Categories
 from main_app.forms import ProductForm, CategoriesForm
+from main_app.forms import SimpleSearchForm
+from urllib.parse import urlencode
+from django.urls import reverse, reverse_lazy
+from django.db.models import Q
+from django.views.generic import ListView, DeleteView, DetailView, UpdateView, CreateView
 # Create your views here.
 
 
-def products_view(request):
-    products = Product.objects.exclude(count=0).order_by('-category', '-title')
-    context = {
-        'products': products
-    }
-    print(products)
-    return render(request, 'main_page.html', context)
-
-def product_add_view(request):
-    if request.method == 'GET':
-        categories = Categories.objects.all()
-        form = ProductForm()
-        context = {
-            'categories': categories,
-            'form': form
-        }
-        return render(request, 'add_product.html', context)
-    elif request.method == 'POST':
-        form = ProductForm(data=request.POST)
-        if form.is_valid():
-            product = Product.objects.create(title=form.cleaned_data['title'], 
-                                   price=form.cleaned_data['price'], 
-                                   image=form.cleaned_data['image'], 
-                                   category=form.cleaned_data['category'], 
-                                   description=form.cleaned_data['description'],
-                                   count=form.cleaned_data['count'])
-            return redirect('product_card', pk=product.pk)
-        else:
-            return render(request, 'add_product.html', context={'form': form})
-
-def product_view(request, pk):
-    product = Product.objects.get(pk=pk)
-    context = {
-        'product': product
-    }
-    return render(request, 'detailed_view.html', context)
-
-def product_delete(request, pk):
-    product = Product.objects.get(pk=pk) 
-    if request.method == 'GET':
-        return render(request, 'delete_product.html', context={'card': product})
-    elif request.method == 'POST':
-        product.delete()
-        return redirect('cards')    
-
-def product_edit_view(request, pk):
-    product = Product.objects.get(pk=pk)
-    if request.method == 'GET':
-        form = ProductForm(initial={
-            'title': product.title,
-            'price': product.price,
-            'image': product.image,
-            'category_id': product.category,
-            'description': product.description,
-            'count': product.count
-        })
-        context = {
-            'product': product,
-            'form': form
-        }
-        return render(request, 'edit_product.html', context)
+class ListProductsView(ListView):
+    template_name = 'main_page.html'
+    context_object_name = 'products'
+    model = Product
+    paginate_by = 5
+    paginate_orphans = 1
     
-    elif request.method == 'POST':
-        form = ProductForm(data=request.POST)
-        if form.is_valid():
-            product.title=form.cleaned_data['title'] 
-            product.price=form.cleaned_data['price'] 
-            product.image=form.cleaned_data['image']
-            product.category=form.cleaned_data['category']
-            product.description=form.cleaned_data['description']
-            product.count=form.cleaned_data['count']
-            product.save()
-            return redirect('product_card', pk=pk)
-        else:
-            return render(request, 'edit_product.html', context={'product': product, 'form': form})
+    def get(self, request, *args, **kwargs):
+        self.form = self.get_search_form()
+        self.search_value = self.get_search_value()
+        return super().get(request, *args, **kwargs)
 
-def category_add_view(request):
-    if request.method == 'GET':
-        form = CategoriesForm()
-        context = {
-            'form': form
-        }
-        return render(request, 'add_category.html', context)
-    elif request.method == 'POST':
-        form = CategoriesForm(data=request.POST)
-        if form.is_valid():
-            Categories.objects.create(title=form.cleaned_data['title'], 
-                                  description=form.cleaned_data['description'])
-            return redirect('products')
-        else:
-            return render(request, 'add_category.html', context={'form': form})
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['form'] = self.form
+        if self.search_value:
+            context['query'] = urlencode({'search': self.search_value})
+            context['search'] = self.search_value
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.search_value:
+            query = Q(title__icontains=self.search_value) | Q(description__icontains=self.search_value)
+            queryset = queryset.filter(query)
+        return queryset
+
+    def get_search_form(self):
+        return SimpleSearchForm(self.request.GET)
+
+    def get_search_value(self):
+        if self.form.is_valid():
+            return self.form.cleaned_data['search']
+        return None
+
+class DetailProductView(DeleteView):
+    template_name = 'detailed_product.html'
+    model = Product
+    context_object_name = 'product'
+    pk_url_kwarg = 'product_pk'
+
+class CreateProductView(CreateView):
+    template_name = 'add_product.html'
+    form_class = ProductForm
+    
+    def get_success_url(self):
+        return reverse('products')
+
+class UpdateProduct(UpdateView):
+    model = Product
+    template_name = 'edit_product.html'
+    pk_url_kwarg = 'product_pk'
+    form_class = ProductForm
+    context_object_name = 'product'
+
+    def get_success_url(self):
+        return reverse('product_card', kwargs={'product_pk': self.object.pk})
+
+
+class DeleteProduct(DeleteView):
+    template_name = 'delete_product.html'
+    pk_url_kwarg = 'product_pk'
+    model = Product
+    context_object_name = 'product'
+    success_url = reverse_lazy('products')
+
+
+class CreateCategoryView(CreateView):
+    template_name = 'add_category.html'
+    form_class = CategoriesForm
+    
+    def get_success_url(self):
+        return reverse('products')
